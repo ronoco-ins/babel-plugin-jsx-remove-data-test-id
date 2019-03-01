@@ -18,13 +18,6 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
-      it('does not remove attributes that contain "data-test-id" in part only', () => {
-        const code = '<p data-test-id-not="not-test-id">hi, finally it is cake time</p>';
-        const actual = transform(code, { usePlugin: true });
-        const expected = transform(code);
-        expect(uglify(actual)).to.equal(uglify(expected));
-      });
-
       it('removes data-test-id', () => {
         const code = '<p data-test-id="test-id"></p>';
         const expectedCode = '<p></p>';
@@ -49,63 +42,30 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
-      describe('with invalid options.attributes', () => {
-        it('throws error when attributes is empty string', () => {
+      describe('with invalid options.prefixes', () => {
+        it('throws error when prefixes is empty string', () => {
           const code = '<p selenium-id={false}></p>';
           const expectedCode = '<p></p>';
           const action = () => transform(code, {
             useErroneousAttributes: true,
-            attributes: ''
+            prefixes: ''
           });
           expect(action).to.throw();
         });
 
-        it('throws error when attributes is empty array', () => {
+        it('throws error when prefixes is empty array', () => {
           const code = '<p selenium-id={false}></p>';
           const expectedCode = '<p></p>';
           const action = () => transform(code, {
             useErroneousAttributes: true,
-            attributes: []
+            prefixes: []
           });
           expect(action).to.throw();
         });
-      })
-
-      describe('with valid options.attributes', () => {
-        it('does not remove attributes that match options.attributes in part only', () => {
-          const code = '<p selenium-id-not="not-test-id" no-useless-attr="useless">hi, finally it is cake time</p>';
-          const actual = transform(code, { useValidAttributes: true });
-          const expected = transform(code);
-          expect(uglify(actual)).to.equal(uglify(expected));
-        });
-
-        it('removes options.attributes', () => {
-          const code = '<p selenium-id="test-id" useless-attr="useless"></p>';
-          const expectedCode = '<p></p>';
-          const actual = transform(code, { useValidAttributes: true });
-          const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
-        });
-
-        it('removes options.attributes funcs', () => {
-          const code = '<p selenium-id={() => {}} useless-attr={() => {}}></p>';
-          const expectedCode = '<p></p>';
-          const actual = transform(code, { useValidAttributes: true });
-          const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
-        });
-
-        it('removes options.attributes bools', () => {
-          const code = '<p selenium-id={false} useless-attr={true}></p>';
-          const expectedCode = '<p></p>';
-          const actual = transform(code, { useValidAttributes: true });
-          const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
-        });
-      })
+      });
     });
-  })
-}
+  });
+};
 
 runTests(
   "babel6",
@@ -115,19 +75,19 @@ runTests(
       useErroneousAttributes = false,
       useValidAttributes = false,
       usePlugin = false,
-      attributes
+      prefixes
     } = {}
   ) => {
     let plugins;
     if (useErroneousAttributes) {
       plugins = [
-        ["./src", { attributes }],
+        ["./src", { prefixes }],
         ["transform-react-jsx", { pragma: "j" }],
         ["transform-es2015-arrow-functions", {}]
       ];
     } else if (useValidAttributes) {
       plugins = [
-        ["./src", { attributes: ["selenium-id", "useless-attr"] }],
+        ["./src", { prefixes: ["selenium-id", "useless-attr"] }],
         ["transform-react-jsx", { pragma: "j" }],
         ["transform-es2015-arrow-functions", {}]
       ];
@@ -149,19 +109,19 @@ runTests(
       useErroneousAttributes = false,
       useValidAttributes = false,
       usePlugin = false,
-      attributes
+      prefixes
     } = {}
   ) => {
     let plugins
     if (useErroneousAttributes) {
       plugins = [
-        ['./src', { attributes }],
+        ['./src', { prefixes }],
         ["@babel/transform-react-jsx", { pragma: "j" }],
         ["@babel/transform-arrow-functions", {}]
       ]
     } else if (useValidAttributes) {
       plugins = [
-        ['./src', { attributes: ['selenium-id', 'useless-attr'] }],
+        ['./src', { prefixes: ['selenium-id', 'useless-attr'] }],
         ["@babel/transform-react-jsx", { pragma: "j" }],
         ["@babel/transform-arrow-functions", {}]
       ]

@@ -1,23 +1,23 @@
-const getAttributeIdentifiers = options => {
-  if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id', 'data-testid'];
-  
-  if(Array.isArray(options.attributes)) {
-    if(options.attributes.length === 0) {
-      throw new Error('option attributes must be an array with at least one element');
+const getPrefixIdentifiers = options => {
+  if(!options || typeof(options.prefixes) === 'undefined') return ['data-test-'];
+
+  if(Array.isArray(options.prefixes)) {
+    if(options.prefixes.length === 0) {
+      throw new Error('option prefixes must be an array with at least one element');
     }
-    
-    if (options.attributes.length !==  options.attributes.filter(attr => attr && typeof(attr) === 'string').length) {
-      throw new Error('all items in the option attributes must be non empty strings');
+
+    if(options.prefixes.length !== options.prefixes.filter(attr=> attr && typeof(attr) === 'string').length) {
+      throw new Error('all items in the option prefixes must be non empty strings');
     }
-    
-    return options.attributes;
+
+    return options.prefixes;
   }
-  
-  if(!options.attributes || typeof(options.attributes) !== 'string') {
-    throw new Error('option attributes must be a non empty string or an array with non empty strings');
+
+  if(!options.prefixes || typeof(options.prefixes) !== 'string') {
+    throw new Error('option prefixes must be a non empty string or an array with non empty strings');
   }
-  
-  return [options.attributes];
+
+  return [options.prefixes];
 }
 
 const RemoveDataTestIds = ({ types: t }) => {
@@ -27,12 +27,13 @@ const RemoveDataTestIds = ({ types: t }) => {
         return;
       }
 
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
+      const prefixIdentifiers = getPrefixIdentifiers(state.opts);
 
       const validTestIdAttributes = attr => {
-        const isIdent = attributeIdentifiers.find(
+        const isIdent = prefixIdentifiers.find(
           attribute => {
-            return t.isJSXIdentifier(attr.name, { name: attribute });
+            const r = new RegExp(attribute);
+            return t.isJSXIdentifier(attr.name) && r.test(attr.name.name);
           }
         );
         return t.isJSXAttribute(attr) && isIdent;
