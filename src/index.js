@@ -32,7 +32,7 @@ const RemoveDataTestIds = ({ types: t }) => {
       const validTestIdAttributes = attr => {
         const isIdent = prefixIdentifiers.find(
           attribute => {
-            const r = new RegExp(attribute);
+            const r = new RegExp('^'+attribute);
             return t.isJSXIdentifier(attr.name) && r.test(attr.name.name);
           }
         );
