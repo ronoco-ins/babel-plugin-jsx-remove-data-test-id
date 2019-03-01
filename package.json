@@ -1,8 +1,8 @@
 {
-  "name": "babel-plugin-jsx-remove-data-test-id",
-  "version": "2.0.0",
-  "description": "babel plugin to remove data-test-id attributes",
-  "main": "lib/index2.js",
+  "name": "babel-plugin-jsx-remove-data-test-prefix",
+  "version": "0.1.0",
+  "description": "babel plugin to remove data-test- prefixed attributes",
+  "main": "lib/index.js",
   "keywords": [
     "babel",
     "plugin",
@@ -18,13 +18,13 @@
     "e2e testing",
     "test-id"
   ],
-  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
+  "repository": "git://github.com/ronoco-ins/babel-plugin-jsx-remove-data-test-prefix.git",
   "scripts": {
     "build": "babel src --out-dir lib",
     "prepare": "npm test && npm run build",
     "test": "mocha \"**/*.spec.js\" --compilers js:@babel/register --reporter spec"
   },
-  "author": "Rich Gorman",
+  "contributors": ["Rich Gorman", "Max Jackson"],
   "license": "MIT",
   "peerDependencies": {
     "@babel/core": "^7.0.0"

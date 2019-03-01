@@ -1,6 +1,13 @@
-## babel-plugin-jsx-remove-data-test-id
+## babel-plugin-jsx-remove-data-test-prefix
 
-Remove `data-test-id` attributes from your production builds.
+Remove `data-test-` prefixed attributes from your production builds.
+
+##### Based heavily on `babel-plugin-remove-data-test-id`
+
+This babel-plugin is a fork of `babel-plugin-remove-data-test-id` where a regular expression takes the place of the strict string comparison.
+
+Most of the credit for this plugin goes to [Rich Gorman](https://github.com/coderas/).
+
 
 ### Motivation
 
@@ -14,28 +21,32 @@ level tests and end to end test. Bring in:
 
 `data-test-id="some-test-id"`
 
-This package give you the ability to strip these test id's from production code.
+or
+
+`data-test-some-arbitrary-attribute="whatever value"`
+
+This package give you the ability to strip these test attributes from production code.
 
 ### Install
 
 ```bash
-npm install babel-plugin-jsx-remove-data-test-id --save-dev
+npm install ronoco-ins/babel-plugin-jsx-remove-data-test-prefix --save-dev
 ```
 
 Add this to you babel config plugins
 
 ```javascript
-plugins: ["babel-plugin-jsx-remove-data-test-id"];
+plugins: ["babel-plugin-jsx-remove-data-test-prefix"];
 ```
 
 ### How to use
 
-Add `data-test-id` to your react components
+Add some `data-test-any-attribute` to your react components
 
 ```javascript
 return (
   <div>
-    <p data-test-id="component-text">{someText}</p>
+    <p data-test-any-attribute="component-text">{someText}</p>
   </div>
 );
 ```
@@ -46,13 +57,14 @@ This plugin specifies Babel 7 as its peer dependency - while it also works with 
 
 ### Define custom attribute name(s)
 
-By default attributes with name `data-test-id` or `data-testid` (as used in [react-testing-library](https://testing-library.com/react)) will be stripped. You can also define custom attribute names via plugin options in your babel config:
+By default attributes with the prefix `data-test-` (such as `data-test-id` used in [react-testing-library](https://testing-library.com/react)) will be stripped.
+You can also define custom prefix names via plugin options in your babel config:
 
 ```javascript
 plugins: [
   "babel-plugin-jsx-remove-data-test-id",
   {
-    attributes: "selenium-id"
+    prefixes: "qa-"
   }
 ];
 ```
@@ -63,9 +75,9 @@ Or if you need to strip off multiple attributes, you can define an attributes ar
 plugins: [
   "babel-plugin-jsx-remove-data-test-id",
   {
-    attributes: ["data-test-id", "selenium-id", "another-attr-to-be-stripped"]
+    prefixes: ["data-test-", "selenium-", "qa-"]
   }
 ];
 ```
 
-Make sure the plugins are part of your babel config, and build away - that's it. `data-test-id`'s (respectively your custom named attributes) will be stripped.
+Make sure the plugins are part of your babel config, and build away - that's it. Attributes prefixed with `data-test-` (respectively your custom named prefixes) will be stripped.
